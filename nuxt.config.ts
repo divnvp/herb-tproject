@@ -13,4 +13,9 @@ export default defineNuxtConfig({
   ],
 
   css: ["/assets/css/main.css"],
+  runtimeConfig: {
+    public: {
+      baseURL: process.env.BASE_URL || "https://herb.tproject.su/api/",
+    },
+  },
 });

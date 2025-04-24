@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import * as v from "valibot";
 import type { FormSubmitEvent } from "@nuxt/ui";
+import { useFetchByBaseURL } from "~/composables/fetch-by-base-url";
 
 const schema = v.object({
   login: v.pipe(v.string(), v.email("Неверный e-mail")),
@@ -14,9 +15,19 @@ const state = reactive({
   password: "",
 });
 
+// Password: Qw12345678!
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  console.log(event.data.password);
-  console.log(event.data.login);
+  const { data, status, error, refresh, clear } = await useFetchByBaseURL(
+    "token/",
+    {
+      method: "POST",
+      body: {
+        email: event.data.login,
+        password: event.data.password,
+      },
+    },
+  );
+  console.log(data, status, error, refresh, clear);
 }
 </script>
 
