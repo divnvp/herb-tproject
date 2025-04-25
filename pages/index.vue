@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import AuthCard from "~/components/AuthCard.vue";
+import { useAuthorization } from "~/composables/use-authorization";
+
+const { logout } = useAuthorization();
 </script>
 
 <template>
-  <AuthCard />
+  <div>
+    <button @click="logout">Logout</button>
+  </div>
 </template>
