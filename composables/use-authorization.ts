@@ -65,5 +65,6 @@ export const useAuthorization = () => {
     initAuth,
     onAuth,
     logout,
+    refresh,
   };
 };
