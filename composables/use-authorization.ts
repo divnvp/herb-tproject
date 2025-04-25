@@ -5,8 +5,6 @@ import { getCookie } from "#shared/utils/get-cookie";
 import { setCookie } from "#shared/utils/set-cookie";
 
 export const useAuthorization = () => {
-  const refreshToken = ref("");
-
   const initAuth = async () => {
     if (getCookie("accessToken")) {
       return;
@@ -33,14 +31,15 @@ export const useAuthorization = () => {
   };
 
   const refresh = async () => {
-    if (refreshToken.value) {
-      return;
-    }
-
     try {
-      await useFetchByBaseURL<AccessToken>("token/refresh/", {
+      await useFetchByBaseURL<AccessToken | null>("token/refresh/", {
         method: Method.POST,
-      }).then((result) => setCookie("accessToken", result.access));
+      }).then((result) => {
+        if (result?.access) {
+          setCookie("accessToken", "", { expires: 0 });
+          setCookie("accessToken", result.access);
+        }
+      });
     } catch {
       await logout();
     }
@@ -55,6 +54,7 @@ export const useAuthorization = () => {
         },
         credentials: "include",
       });
+      setCookie("accessToken", "", { expires: 0 });
     } catch (e) {
       console.log(e);
     }
