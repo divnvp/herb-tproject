@@ -1,13 +1,14 @@
 import { useFetchByBaseURL } from "~/composables/fetch-by-base-url";
 import { Method } from "#shared/enum/method.enum";
 import type { AuthData } from "#shared/types/auth";
+import { getCookie } from "#shared/utils/get-cookie";
+import { setCookie } from "#shared/utils/set-cookie";
 
 export const useAuthorization = () => {
-  const accessToken = ref("");
   const refreshToken = ref("");
 
   const initAuth = async () => {
-    if (accessToken.value) {
+    if (getCookie("accessToken")) {
       return;
     }
 
@@ -23,7 +24,9 @@ export const useAuthorization = () => {
       await useFetchByBaseURL("token/", {
         method: Method.POST,
         body,
-      }).then((result) => (accessToken.value = result.data.value.access));
+      }).then((result) => {
+        setCookie("accessToken", result.data.value.access);
+      });
     } catch (e) {
       console.log(e);
     }
@@ -37,7 +40,7 @@ export const useAuthorization = () => {
     try {
       await useFetchByBaseURL("token/refresh/", {
         method: Method.POST,
-      }).then((result) => (accessToken.value = result.data.value));
+      }).then((result) => setCookie("accessToken", result.data.value.access));
     } catch {
       await logout();
     }
@@ -47,6 +50,10 @@ export const useAuthorization = () => {
     try {
       await useFetchByBaseURL("logout/", {
         method: Method.POST,
+        headers: {
+          Authorization: `Bearer ${getCookie("accessToken")}`,
+        },
+        credentials: "include",
       });
     } catch (e) {
       console.log(e);
@@ -54,7 +61,7 @@ export const useAuthorization = () => {
   };
 
   return {
-    isAuthenticated: computed(() => !!accessToken.value),
+    isAuthenticated: computed(() => !!getCookie("accessToken")),
     initAuth,
     onAuth,
     logout,
