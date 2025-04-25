@@ -1,5 +1,6 @@
 import { useFetchByBaseURL } from "~/composables/fetch-by-base-url";
 import { Method } from "#shared/enum/method.enum";
+import type { AuthData } from "#shared/types/auth";
 
 export const useAuthorization = () => {
   const accessToken = ref("");
@@ -13,6 +14,17 @@ export const useAuthorization = () => {
     try {
       await refresh();
     } catch {
+      console.log(e);
+    }
+  };
+
+  const onAuth = async (body: AuthData) => {
+    try {
+      await useFetchByBaseURL("token/", {
+        method: Method.POST,
+        body,
+      }).then((result) => (accessToken.value = result.data.value.access));
+    } catch (e) {
       console.log(e);
     }
   };
@@ -42,7 +54,9 @@ export const useAuthorization = () => {
   };
 
   return {
-    isAuthenticated: !!accessToken.value,
+    isAuthenticated: computed(() => !!accessToken.value),
     initAuth,
+    onAuth,
+    logout,
   };
 };
