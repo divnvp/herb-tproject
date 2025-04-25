@@ -5,8 +5,10 @@ import { getCookie } from "#shared/utils/get-cookie";
 import { setCookie } from "#shared/utils/set-cookie";
 
 export const useAuthorization = () => {
+  const isAuth = ref(false);
+
   const initAuth = async () => {
-    if (getCookie("accessToken")) {
+    if (getCookie("accessToken") || isAuth.value === false) {
       return;
     }
 
@@ -24,6 +26,7 @@ export const useAuthorization = () => {
         body,
       }).then((result) => {
         setCookie("accessToken", result.access);
+        isAuth.value = true;
       });
     } catch (e) {
       console.log(e);
@@ -38,6 +41,7 @@ export const useAuthorization = () => {
         if (result?.access) {
           setCookie("accessToken", "", { expires: 0 });
           setCookie("accessToken", result.access);
+          isAuth.value = true;
         }
       });
     } catch {
@@ -48,13 +52,14 @@ export const useAuthorization = () => {
   const logout = async () => {
     try {
       await useFetchByBaseURL("logout/", {
-        method: Method.POST,
+        method: Method.GET,
         headers: {
           Authorization: `Bearer ${getCookie("accessToken")}`,
         },
         credentials: "include",
       });
       setCookie("accessToken", "", { expires: 0 });
+      isAuth.value = false;
     } catch (e) {
       console.log(e);
     }
