@@ -1,6 +1,8 @@
+import type { NitroFetchRequest } from "nitropack";
+
 export const useFetchByBaseURL = async <T>(
   request: NitroFetchRequest,
-  opts?: FetchOptions,
+  opts?: object,
 ): Promise<T> => {
   const config = useRuntimeConfig();
 

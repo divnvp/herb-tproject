@@ -4,7 +4,7 @@ import { useFavorites } from "~/composables/use-favorites";
 import type { Favorite } from "#shared/types/favorite";
 import type { Pagination } from "#shared/types/pagination";
 
-const { logout, isAuthenticated, refresh } = useAuthorization();
+const { logout } = useAuthorization();
 const { getAllFavorites } = useFavorites();
 const favorites = ref<Pagination<Favorite> | null>(null);
 const carousel = useTemplateRef("carousel");
@@ -15,9 +15,6 @@ onMounted(async () => {
 });
 
 const init = async () => {
-  if (!isAuthenticated.value) {
-    await refresh();
-  }
   favorites.value = await getAllFavorites();
 };
 
@@ -49,7 +46,7 @@ function onSelect(index: number) {
         ref="carousel"
         v-slot="{ item }"
         arrows
-        :items="favorites"
+        :items="favorites?.results"
         :prev="{ onClick: onClickPrev }"
         :next="{ onClick: onClickNext }"
         class="w-full max-w-xs mx-auto"
@@ -59,7 +56,7 @@ function onSelect(index: number) {
 
       <div class="flex gap-1 justify-between pt-4 max-w-xs mx-auto">
         <div
-          v-for="(item, index) in favorites"
+          v-for="(item, index) in favorites?.results"
           :key="index"
           class="size-11 opacity-25 hover:opacity-100 transition-opacity"
           :class="{ 'opacity-100': activeIndex === index }"

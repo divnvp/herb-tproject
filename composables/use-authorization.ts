@@ -1,6 +1,6 @@
 import { useFetchByBaseURL } from "~/composables/fetch-by-base-url";
 import { Method } from "#shared/enum/method.enum";
-import type { AuthData } from "#shared/types/auth";
+import type { AccessToken, AuthData } from "#shared/types/auth";
 import { getCookie } from "#shared/utils/get-cookie";
 import { setCookie } from "#shared/utils/set-cookie";
 
@@ -14,18 +14,18 @@ export const useAuthorization = () => {
 
     try {
       await refresh();
-    } catch {
+    } catch (e) {
       console.log(e);
     }
   };
 
   const onAuth = async (body: AuthData) => {
     try {
-      await useFetchByBaseURL("token/", {
+      await useFetchByBaseURL<AccessToken>("token/", {
         method: Method.POST,
         body,
       }).then((result) => {
-        setCookie("accessToken", result.data.value.access);
+        setCookie("accessToken", result.access);
       });
     } catch (e) {
       console.log(e);
@@ -38,9 +38,9 @@ export const useAuthorization = () => {
     }
 
     try {
-      await useFetchByBaseURL("token/refresh/", {
+      await useFetchByBaseURL<AccessToken>("token/refresh/", {
         method: Method.POST,
-      }).then((result) => setCookie("accessToken", result.data.value.access));
+      }).then((result) => setCookie("accessToken", result.access));
     } catch {
       await logout();
     }
