@@ -61,7 +61,7 @@ function onSelect(index: number) {
           :class="{ 'opacity-100': activeIndex === index }"
           @click="onSelect(index)"
         >
-          <div>{{ item }}</div>
+          <div class="cursor-pointer">Продукт № {{ item.product }}</div>
         </div>
       </div>
     </div>

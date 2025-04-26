@@ -1,75 +1,43 @@
-# Nuxt Minimal Starter
+# Тестовый проект herb.tproject
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Деплой демонстрационного проекта: https://brilliant-starship-1c7d68.netlify.app/
 
-## Setup
+Демонстрация работы:
 
-Make sure to install dependencies:
+![](/public/for-readme/record.mov)
 
-```bash
-# npm
-npm install
+Проект демонстрирует процесс авторизации в системе по следующему алгоритму:
 
-# pnpm
-pnpm install
+1. При аутентификации пользователя генерируются access_token и refresh_token
+2. После окончания действия access_token выполняется метод на обновление токена
 
-# yarn
-yarn install
+Особенности:
 
-# bun
-bun install
-```
+1. access_token действителен 5 мин, refresh_token - неделю
+2. Для запросов, нуждающихся в авторизации, передается хедер `Bearer {токен}`
 
-## Development Server
+## Технологии:
 
-Start the development server on `http://localhost:3000`:
+- Nuxt v.3
+- TypeScript
 
-```bash
-# npm
-npm run dev
+## API
 
-# pnpm
-pnpm dev
+- /api/token/ - POST
+- /api/token/refresh/ - POST
+- /api/logout/ - GET (!), нужны данные авторизации
+- /api/favorites/ - GET, нужны данные авторизации
 
-# yarn
-yarn dev
+## Запуск проекта
 
-# bun
-bun run dev
-```
+Для того чтобы локально запустить проект, необходимо склонировать его на локальную машину командой
 
-## Production
+`git clone https://github.com/divnvp/herb-tproject.git`
 
-Build the application for production:
+После чего, находясь в папке herb-tproject, запустить в следующем порядке команды
 
-```bash
-# npm
-npm run build
+`npm install`
 
-# pnpm
-pnpm build
+`npm run dev`
 
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Проект будет доступен на http://localhost:3000/
