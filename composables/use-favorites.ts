@@ -17,18 +17,18 @@ export const useFavorites = () => {
    */
   const getAllFavorites = async (): Promise<Pagination<Favorite> | null> => {
     try {
-      return await getFavorites();
+      return await getFavoritesAPI();
     } catch (error: unknown) {
       if ((error as Error).status === ApiStatus.Unauthorized) {
         await refresh();
-        return await getFavorites();
+        return await getFavoritesAPI();
       }
       return null;
     }
   };
 
   // Метод для получения всех данных об избранном
-  const getFavorites = async (): Promise<Pagination<Favorite>> => {
+  const getFavoritesAPI = async (): Promise<Pagination<Favorite>> => {
     return await useFetchByBaseURL<Pagination<Favorite>>("favorites/", {
       method: Method.GET,
       headers: {

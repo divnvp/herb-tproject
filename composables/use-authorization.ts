@@ -3,6 +3,8 @@ import { Method } from "#shared/enum/method.enum";
 import type { AccessToken, AuthData } from "#shared/types/auth";
 import { getCookie } from "#shared/utils/get-cookie";
 import { setCookie } from "#shared/utils/set-cookie";
+import type { Error } from "#shared/types/error";
+import { ApiStatus } from "#shared/enum/api-status";
 
 // Сервис для работы с API авторизации
 export const useAuthorization = () => {
@@ -57,20 +59,30 @@ export const useAuthorization = () => {
     }
   };
 
-  // Метод для выхода пользователя из системы
+  /**
+   * Метод для работы с API выхода пользователя из системы
+   * Когда метод возвращает 401 (Unauthorized), отправляется запрос на обновление токена
+   */
   const logout = async () => {
     try {
-      await useFetchByBaseURL("logout/", {
-        method: Method.GET,
-        headers: {
-          Authorization: `Bearer ${getCookie("accessToken")}`,
-        },
-      });
-      setCookie("accessToken", "", { expires: 0 });
-      isAuth.value = false;
+      await logoutAPI();
     } catch (e) {
-      console.log(e);
+      if ((e as Error).status === ApiStatus.Unauthorized) {
+        await refresh();
+      }
     }
+  };
+
+  // Метод для выхода пользователя из системы
+  const logoutAPI = async () => {
+    await useFetchByBaseURL("logout/", {
+      method: Method.GET,
+      headers: {
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    });
+    setCookie("accessToken", "", { expires: 0 });
+    isAuth.value = false;
   };
 
   return {
