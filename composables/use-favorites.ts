@@ -7,8 +7,14 @@ import { useAuthorization } from "~/composables/use-authorization";
 import type { Error } from "#shared/types/error";
 import { ApiStatus } from "#shared/enum/api-status";
 
+// Сервис для работы с API "Избранное"
 export const useFavorites = () => {
   const { refresh } = useAuthorization();
+
+  /**
+   * Метод для работы с API "Избранное"
+   * Когда метод возвращает 401 (Unauthorized), отправляется запрос на обновление токена
+   */
   const getAllFavorites = async (): Promise<Pagination<Favorite> | null> => {
     try {
       return await getFavorites();
@@ -21,10 +27,10 @@ export const useFavorites = () => {
     }
   };
 
+  // Метод для получения всех данных об избранном
   const getFavorites = async (): Promise<Pagination<Favorite>> => {
     return await useFetchByBaseURL<Pagination<Favorite>>("favorites/", {
       method: Method.GET,
-      credentials: "include",
       headers: {
         Authorization: `Bearer ${getCookie("accessToken")}`,
       },

@@ -32,14 +32,13 @@ function onClickNext() {
 
 function onSelect(index: number) {
   activeIndex.value = index;
-
   carousel.value?.emblaApi?.scrollTo(index);
 }
 </script>
 
 <template>
-  <div>
-    <UButton class="cursor-pointer" @click="onLogout()">Logout</UButton>
+  <div class="flex flex-col justify-center items-center gap-3">
+    <UButton class="cursor-pointer" @click="onLogout()">Выйти</UButton>
 
     <div class="flex-1 w-full">
       <UCarousel
@@ -57,7 +56,7 @@ function onSelect(index: number) {
       <div class="flex gap-1 justify-between pt-4 max-w-xs mx-auto">
         <div
           v-for="(item, index) in favorites?.results"
-          :key="index"
+          :key="item.id"
           class="size-11 opacity-25 hover:opacity-100 transition-opacity"
           :class="{ 'opacity-100': activeIndex === index }"
           @click="onSelect(index)"

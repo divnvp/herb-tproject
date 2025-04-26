@@ -1,6 +1,6 @@
 import { useAuthorization } from "~/composables/use-authorization";
 
-export default defineNuxtRouteMiddleware(async (to, from) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   // Пропустить проверку на сервере, так как нужна только клиентская сторона
   if (import.meta.server) {
     return;

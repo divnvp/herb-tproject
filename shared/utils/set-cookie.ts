@@ -1,3 +1,9 @@
+/**
+ * Стандартная утилита для сохранения токена в куку document.cookie
+ * @param name - уникальный ключ для сохранения куки
+ * @param value - значение куки
+ * @param props - опциональные свойства. Используемые: {expires: 0} - для удаления сохраненной куки
+ */
 export function setCookie(
   name: string,
   value: string,

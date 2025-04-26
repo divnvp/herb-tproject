@@ -4,9 +4,15 @@ import type { AccessToken, AuthData } from "#shared/types/auth";
 import { getCookie } from "#shared/utils/get-cookie";
 import { setCookie } from "#shared/utils/set-cookie";
 
+// Сервис для работы с API авторизации
 export const useAuthorization = () => {
+  // Флаг для определения типа запроса: с авторизацией или без
   const isAuth = ref(false);
 
+  /**
+   * Метод для инициализации авторизации.
+   * Если пользователь авторизован или выполнил запрос без авторизации, то токен не обновляется
+   */
   const initAuth = async () => {
     if (getCookie("accessToken") || isAuth.value === false) {
       return;
@@ -19,6 +25,7 @@ export const useAuthorization = () => {
     }
   };
 
+  // Метод для авторизации пользователя в системе
   const onAuth = async (body: AuthData) => {
     try {
       await useFetchByBaseURL<AccessToken>("token/", {
@@ -33,6 +40,7 @@ export const useAuthorization = () => {
     }
   };
 
+  // Метод для обновления токена авторизации
   const refresh = async () => {
     try {
       await useFetchByBaseURL<AccessToken | null>("token/refresh/", {
@@ -49,6 +57,7 @@ export const useAuthorization = () => {
     }
   };
 
+  // Метод для выхода пользователя из системы
   const logout = async () => {
     try {
       await useFetchByBaseURL("logout/", {
@@ -56,7 +65,6 @@ export const useAuthorization = () => {
         headers: {
           Authorization: `Bearer ${getCookie("accessToken")}`,
         },
-        credentials: "include",
       });
       setCookie("accessToken", "", { expires: 0 });
       isAuth.value = false;
