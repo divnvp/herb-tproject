@@ -1,7 +1,5 @@
 import { Method } from "#shared/enum/method.enum";
 import type { AccessToken, AuthData } from "#shared/types/auth";
-import { getCookie } from "#shared/utils/get-cookie";
-import { setCookie } from "#shared/utils/set-cookie";
 import type { Error } from "#shared/types/error";
 import { ApiStatus } from "#shared/enum/api-status";
 
@@ -16,7 +14,7 @@ export const useAuthorization = () => {
    * Если пользователь авторизован или выполнил запрос без авторизации, то токен не обновляется
    */
   const initAuth = async () => {
-    if (getCookie("accessToken") || isAuth.value === false) {
+    if (localStorage.getItem("accessToken") || isAuth.value === false) {
       return;
     }
 
@@ -38,7 +36,7 @@ export const useAuthorization = () => {
         method: Method.POST,
         body,
       }).then((result) => {
-        setCookie("accessToken", result.access);
+        localStorage.setItem("accessToken", result.access);
         isAuth.value = true;
       });
     } catch (e) {
@@ -57,8 +55,8 @@ export const useAuthorization = () => {
         method: Method.POST,
       }).then((result) => {
         if (result?.access) {
-          setCookie("accessToken", "", { expires: 0 });
-          setCookie("accessToken", result.access);
+          localStorage.removeItem("accessToken");
+          localStorage.setItem("accessToken", result.access);
           isAuth.value = true;
         }
       });
@@ -92,15 +90,15 @@ export const useAuthorization = () => {
     await $fetch("/api/logout/", {
       method: Method.GET,
       headers: {
-        Authorization: `Bearer ${getCookie("accessToken")}`,
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });
-    setCookie("accessToken", "", { expires: 0 });
+    localStorage.removeItem("accessToken");
     isAuth.value = false;
   };
 
   return {
-    isAuthenticated: computed(() => !!getCookie("accessToken")),
+    isAuthenticated: computed(() => !!localStorage.getItem("accessToken")),
     initAuth,
     onAuth,
     logout,

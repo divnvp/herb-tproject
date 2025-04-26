@@ -1,5 +1,4 @@
 import { Method } from "#shared/enum/method.enum";
-import { getCookie } from "#shared/utils/get-cookie";
 import type { Favorite } from "#shared/types/favorite";
 import type { Pagination } from "#shared/types/pagination";
 import { useAuthorization } from "~/composables/use-authorization";
@@ -37,7 +36,7 @@ export const useFavorites = () => {
     return await $fetch<Pagination<Favorite>>("/api/favorites/", {
       method: Method.GET,
       headers: {
-        Authorization: `Bearer ${getCookie("accessToken")}`,
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });
   };
