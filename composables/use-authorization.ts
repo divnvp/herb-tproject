@@ -63,7 +63,7 @@ export const useAuthorization = () => {
         }
       });
     } catch {
-      await logout();
+      navigateTo("/auth");
     }
   };
 
