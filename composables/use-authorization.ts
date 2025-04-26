@@ -67,11 +67,7 @@ export const useAuthorization = () => {
     try {
       await logoutAPI();
     } catch (e) {
-      console.log(e);
-      if (
-        (e as Error).status === ApiStatus.Unauthorized &&
-        (e as Error).data.code !== "token_not_valid"
-      ) {
+      if ((e as Error).status === ApiStatus.Unauthorized) {
         await refresh();
       }
     }
