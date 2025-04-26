@@ -9,6 +9,7 @@ import { ApiStatus } from "#shared/enum/api-status";
 export const useAuthorization = () => {
   // Флаг для определения типа запроса: с авторизацией или без
   const isAuth = ref(false);
+  const toast = useToast();
 
   /**
    * Метод для инициализации авторизации.
@@ -22,7 +23,11 @@ export const useAuthorization = () => {
     try {
       await refresh();
     } catch (e) {
-      console.log(e);
+      toast.add({
+        title: "Ошибка",
+        color: "error",
+        description: ((e as Error).data?.detail as string) ?? "",
+      });
     }
   };
 
@@ -37,7 +42,11 @@ export const useAuthorization = () => {
         isAuth.value = true;
       });
     } catch (e) {
-      console.log(e);
+      toast.add({
+        title: "Ошибка",
+        color: "error",
+        description: ((e as Error).data?.detail as string) ?? "",
+      });
     }
   };
 
@@ -68,6 +77,12 @@ export const useAuthorization = () => {
     } catch (e) {
       if ((e as Error).status === ApiStatus.Unauthorized) {
         await refresh();
+      } else {
+        toast.add({
+          title: "Ошибка",
+          color: "error",
+          description: ((e as Error).data?.detail as string) ?? "",
+        });
       }
     }
   };

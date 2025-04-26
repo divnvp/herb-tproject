@@ -9,6 +9,7 @@ import { ApiStatus } from "#shared/enum/api-status";
 // Сервис для работы с API "Избранное"
 export const useFavorites = () => {
   const { refresh } = useAuthorization();
+  const toast = useToast();
 
   /**
    * Метод для работы с API "Избранное"
@@ -17,11 +18,16 @@ export const useFavorites = () => {
   const getAllFavorites = async (): Promise<Pagination<Favorite> | null> => {
     try {
       return await getFavoritesAPI();
-    } catch (error: unknown) {
-      if ((error as Error).status === ApiStatus.Unauthorized) {
+    } catch (e: unknown) {
+      if ((e as Error).status === ApiStatus.Unauthorized) {
         await refresh();
         return await getFavoritesAPI();
       }
+      toast.add({
+        title: "Ошибка",
+        color: "error",
+        description: ((e as Error).data?.detail as string) ?? "",
+      });
       return null;
     }
   };

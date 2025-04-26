@@ -1,13 +1,10 @@
 export type Error = {
   status: number;
-  data: {
-    message: string;
-    code: string;
-  };
+  data: ResponseError;
 };
 
 export type ResponseError = {
-  detail: DetailOfResponseError;
+  detail: DetailOfResponseError | string;
 };
 type DetailOfResponseError = {
   code: string;
