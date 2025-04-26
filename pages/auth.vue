@@ -6,7 +6,6 @@ import { getCookie } from "#shared/utils/get-cookie";
 const { logout } = useAuthorization();
 
 onMounted(async () => {
-  console.log(getCookie("accessToken"));
   if (getCookie("accessToken")) {
     await logout();
   }
