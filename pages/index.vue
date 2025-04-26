@@ -3,12 +3,11 @@ import { useAuthorization } from "~/composables/use-authorization";
 import { useFavorites } from "~/composables/use-favorites";
 import type { Favorite } from "#shared/types/favorite";
 import type { Pagination } from "#shared/types/pagination";
+import CarouselComponent from "~/components/carousel-component.vue";
 
 const { logout } = useAuthorization();
 const { getAllFavorites } = useFavorites();
 const favorites = ref<Pagination<Favorite> | null>(null);
-const carousel = useTemplateRef("carousel");
-const activeIndex = ref(0);
 
 onMounted(async () => {
   await init();
@@ -22,48 +21,12 @@ const onLogout = async () => {
   await logout();
   navigateTo("/auth");
 };
-
-function onClickPrev() {
-  activeIndex.value--;
-}
-function onClickNext() {
-  activeIndex.value++;
-}
-
-function onSelect(index: number) {
-  activeIndex.value = index;
-  carousel.value?.emblaApi?.scrollTo(index);
-}
 </script>
 
 <template>
   <div class="flex flex-col justify-center items-center gap-3">
+    <CarouselComponent :items="favorites?.results" title="Продукт №" />
+
     <UButton class="cursor-pointer" @click="onLogout()">Выйти</UButton>
-
-    <div class="flex-1 w-full">
-      <UCarousel
-        ref="carousel"
-        v-slot="{ item }"
-        arrows
-        :items="favorites?.results"
-        :prev="{ onClick: onClickPrev }"
-        :next="{ onClick: onClickNext }"
-        class="w-full max-w-xs mx-auto"
-      >
-        <div>{{ item }}</div>
-      </UCarousel>
-
-      <div class="flex gap-1 justify-between pt-4 max-w-xs mx-auto">
-        <div
-          v-for="(item, index) in favorites?.results"
-          :key="item.id"
-          class="size-11 opacity-25 hover:opacity-100 transition-opacity"
-          :class="{ 'opacity-100': activeIndex === index }"
-          @click="onSelect(index)"
-        >
-          <div class="cursor-pointer">Продукт № {{ item.product }}</div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
