@@ -2,9 +2,10 @@
 
 Деплой демонстрационного проекта: https://brilliant-starship-1c7d68.netlify.app/
 
-Демонстрация работы:
+Демонстрация работы
 
-![](/public/for-readme/record.mov)
+https://github.com/user-attachments/assets/112a94df-3838-46a9-80ba-6758a89c0f5e
+
 
 Проект демонстрирует процесс авторизации в системе по следующему алгоритму:
 
