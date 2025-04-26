@@ -12,7 +12,7 @@ export const useFetchByBaseURL = async <T>(
 
   try {
     return await $fetch<T>(request, {
-      baseURL: config.public.baseURL,
+      baseURL: config.public.apiBase,
       ...opts,
     });
   } catch (error) {
