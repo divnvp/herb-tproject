@@ -26,4 +26,7 @@ export default defineNuxtConfig({
       },
     },
   },
+  routeRules: {
+    "/api/**": { proxy: { to: "https://herb.tproject.su/api/**" } },
+  },
 });
