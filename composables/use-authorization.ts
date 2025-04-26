@@ -1,4 +1,3 @@
-import { useFetchByBaseURL } from "~/composables/fetch-by-base-url";
 import { Method } from "#shared/enum/method.enum";
 import type { AccessToken, AuthData } from "#shared/types/auth";
 import { getCookie } from "#shared/utils/get-cookie";
@@ -30,7 +29,7 @@ export const useAuthorization = () => {
   // Метод для авторизации пользователя в системе
   const onAuth = async (body: AuthData) => {
     try {
-      await useFetchByBaseURL<AccessToken>("token/", {
+      await $fetch<AccessToken>("/api/token/", {
         method: Method.POST,
         body,
       }).then((result) => {
@@ -45,7 +44,7 @@ export const useAuthorization = () => {
   // Метод для обновления токена авторизации
   const refresh = async () => {
     try {
-      await useFetchByBaseURL<AccessToken | null>("token/refresh/", {
+      await $fetch<AccessToken | null>("/api/token/refresh/", {
         method: Method.POST,
       }).then((result) => {
         if (result?.access) {
@@ -75,7 +74,7 @@ export const useAuthorization = () => {
 
   // Метод для выхода пользователя из системы
   const logoutAPI = async () => {
-    await useFetchByBaseURL("logout/", {
+    await $fetch("/api/logout/", {
       method: Method.GET,
       headers: {
         Authorization: `Bearer ${getCookie("accessToken")}`,

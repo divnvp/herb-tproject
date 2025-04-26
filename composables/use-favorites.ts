@@ -1,4 +1,3 @@
-import { useFetchByBaseURL } from "~/composables/fetch-by-base-url";
 import { Method } from "#shared/enum/method.enum";
 import { getCookie } from "#shared/utils/get-cookie";
 import type { Favorite } from "#shared/types/favorite";
@@ -29,7 +28,7 @@ export const useFavorites = () => {
 
   // Метод для получения всех данных об избранном
   const getFavoritesAPI = async (): Promise<Pagination<Favorite>> => {
-    return await useFetchByBaseURL<Pagination<Favorite>>("favorites/", {
+    return await $fetch<Pagination<Favorite>>("/api/favorites/", {
       method: Method.GET,
       headers: {
         Authorization: `Bearer ${getCookie("accessToken")}`,

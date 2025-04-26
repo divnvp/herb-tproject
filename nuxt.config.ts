@@ -13,9 +13,17 @@ export default defineNuxtConfig({
   ],
 
   css: ["/assets/css/main.css"],
-  runtimeConfig: {
-    public: {
-      apiBase: process.env.BASE_URL || "https://herb.tproject.su/api/",
+  nitro: {
+    devProxy: {
+      "/api/": {
+        target: "https://herb.tproject.su/api/",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "*",
+        },
+        prependPath: true,
+        changeOrigin: true,
+      },
     },
   },
 });
